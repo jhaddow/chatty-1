@@ -12,18 +12,26 @@ if (req.method == 'POST') {
            postData += piece.toString();
         });    
         req.on('end', function() {
-            
-            messages.push(JSON.parse(postData));
-            res.end(JSON.stringify(postData));
+            var messageObject = JSON.parse(postData);
+            messageObject.timeStamp = Date.now();
+            messages.push(messageObject);
+            res.end(JSON.stringify(messageObject));
        });
         
     }
   if(req.method === 'GET'){
     res.end(JSON.stringify(messages))
     }
+    if(req.method === 'OPTIONS'){
+      res.end(JSON.stringify({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'OPTIONS, GET, POST',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+      }))
+    }
 }
 var http = require('http');
 var port = 10101;
-var messages = [];
+var messages = [{"text": "action"}, {"text": "fuckpj"}];
 http.createServer(onRequest).listen(port);
 
